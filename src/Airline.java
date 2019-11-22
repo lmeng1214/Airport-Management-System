@@ -1,5 +1,4 @@
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -14,14 +13,16 @@ import java.util.ArrayList;
 
 public abstract class Airline implements Serializable {
     private String description;
+    private String name;
+
     private int maxCapacity;
 
     private ArrayList<String> souls;
 
-    public Airline(String description, ArrayList<String> passengerFNames, ArrayList<String> passengerLNames,
+    public Airline(String name, String description, ArrayList<String> passengerFNames, ArrayList<String> passengerLNames,
                    ArrayList<Integer> passengerAges, int maxCapacity)
             throws NullPointerException, IllegalArgumentException {
-        if (description == null || passengerFNames == null || passengerLNames == null ||
+        if (name == null || description == null || passengerFNames == null || passengerLNames == null ||
                 passengerAges == null) { //Check that @params are not null
             throw new NullPointerException();
         } else if (maxCapacity <= 0) { //Check that the capacity of the plane is not null
@@ -43,6 +44,7 @@ public abstract class Airline implements Serializable {
                     passengerFNames.get(counter).toUpperCase(), passengerAges.get(counter)));
         }
 
+        this.name = name;
         this.description = description;
         this.maxCapacity = maxCapacity;
 
