@@ -12,58 +12,43 @@ import java.util.ArrayList;
  */
 
 public abstract class Airline implements Serializable {
-    private String description;
+    private String introduction;
     private String name;
 
-    private int maxCapacity;
+    private int capacity;
 
-    private ArrayList<String> souls;
+    private ArrayList<Passenger> souls;
 
-    public Airline(String name, String description, ArrayList<String> passengerFNames, ArrayList<String> passengerLNames,
-                   ArrayList<Integer> passengerAges, int maxCapacity)
-            throws NullPointerException, IllegalArgumentException {
-        if (name == null || description == null || passengerFNames == null || passengerLNames == null ||
-                passengerAges == null) { //Check that @params are not null
-            throw new NullPointerException();
-        } else if (maxCapacity <= 0) { //Check that the capacity of the plane is not null
-            throw new IllegalArgumentException();
-        }
-
-        /**
-         * No need to check if passengerAge, passengerFName, or passengerLName are invalid, as they should be checked
-         * upon input.
-         *
-         * souls should be formatted as follows.
-         * { "LASTINITIAL. FIRSTNAME, AGE", "LASTINITIAL. FIRSTNAME, AGE" }
-         */
-
-        int counter = 0;
-        while (passengerFNames.get(counter) != null && passengerLNames.get(counter) != null) {
-            souls.add(String.format("%s. %s, %d",
-                    passengerLNames.get(counter).substring(0, 1).toUpperCase(),
-                    passengerFNames.get(counter).toUpperCase(), passengerAges.get(counter)));
-        }
-
+    public Airline(String introduction, String name, int capacity, ArrayList<Passenger> souls) {
+        this.introduction = introduction;
         this.name = name;
-        this.description = description;
-        this.maxCapacity = maxCapacity;
 
+        this.capacity = capacity;
 
+        this.souls = souls;
     }
 
-    public int getMaxCapacity() {
-        return this.maxCapacity;
+    // Add accessor methods
+
+    public boolean addPassenger(Passenger addPassenger) {
+        if (this.souls.size() == capacity) {
+            return false;
+        }
+        this.souls.add(addPassenger);
+        return true;
     }
 
-    public ArrayList<String> getSouls() {
-        return this.souls;
+    public String getName() {
+        return this.name;
     }
 
-    public String getDescription() {
-        return this.description;
+    public String getIntroduction() {
+        return this.introduction;
     }
 
-    public boolean isFull() {
-        return (this.getMaxCapacity() == souls.size());
+    public int getCapacity() {
+        return this.capacity;
     }
+
+
 }
