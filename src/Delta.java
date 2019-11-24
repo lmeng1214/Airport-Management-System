@@ -10,6 +10,6 @@ public class Delta extends Airline {
         super("What started as a humble, little aerial crop dusting operation called" +
                 " Huff Daland Dusters in 1925 has now grown into one of the world’s largest global airlines," +
                 " helping more than 180 million travelers get to the places they want to go to each year.",
-                "Delta Airlines", 200, null);
+                "Delta Airlines", 200);
     }
 }

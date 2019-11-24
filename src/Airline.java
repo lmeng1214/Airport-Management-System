@@ -19,13 +19,13 @@ public abstract class Airline implements Serializable {
 
     private ArrayList<Passenger> souls;
 
-    public Airline(String introduction, String name, int capacity, ArrayList<Passenger> souls) {
+    public Airline(String introduction, String name, int capacity) {
         this.introduction = introduction;
         this.name = name;
 
         this.capacity = capacity;
 
-        this.souls = souls;
+        this.souls = new ArrayList<>();
     }
 
     // Add accessor methods
@@ -48,6 +48,14 @@ public abstract class Airline implements Serializable {
 
     public int getCapacity() {
         return this.capacity;
+    }
+
+    public boolean containsPassenger(Passenger passenger) {
+        return this.souls.contains(passenger);
+    }
+
+    public ArrayList<Passenger> getSouls() {
+        return this.souls;
     }
 
 
