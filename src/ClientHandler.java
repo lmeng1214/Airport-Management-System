@@ -63,7 +63,11 @@ public class ClientHandler implements Runnable {
                             oos.writeObject(getFlights(bfrFile));
                             break;
                         case "addPassenger": //Client should query key addPassenger first, then Airline then Passenger
-                            addPassenger(bfrFile, ois, pw);
+                            try {
+                                addPassenger(bfrFile, ois, pw, reservations);
+                            } catch (IOException e) {
+                                bfw.write("FLIGHT_FULL_ERROR");
+                            }
                             break;
                         case "getSouls": //Returns an arraylist of passengers on the airline given.
                             oos.writeObject(getSouls(bfrFile, ois));
@@ -102,18 +106,40 @@ public class ClientHandler implements Runnable {
         return souls;
     }
 
-    private void addPassenger(BufferedReader bfrFile, ObjectInputStream ois, PrintWriter pw)
+    private void addPassenger(BufferedReader bfrFile, ObjectInputStream ois, PrintWriter pw, File reservations)
             throws IOException, ClassNotFoundException {
         // Get passenger data and the flight they are boarding. Assumes client has done checking.
         Airline airline = (Airline) ois.readObject();
         Passenger passenger = (Passenger) ois.readObject();
 
-        while (true) {
-            String thisLine = bfrFile.readLine();
-            if (bfrFile.readLine().contains(airline.getName())) {
-                //Figure how to add text between two lines.
-                //bfrFile.printLine(passenger.toString());
+        ArrayList<String> fileContents = new ArrayList<>();
+        while(true) { // Copy the entire file into an arrayList.
+            String currLine = bfrFile.readLine();
+            if (currLine.equals("EOF")) {
+                fileContents.add("EOF");
+                break;
             }
+            fileContents.add(currLine);
+        }
+
+        //Clear the file.
+        reservations.delete();
+        reservations.createNewFile();
+
+        int counter = 0;
+
+        while(counter != fileContents.size()) {
+            pw.println(fileContents.get(counter)); //Print the entire file until it gets to the AIRLINE_NAME line.
+            if (fileContents.get(counter).contains(airline.getName())) { //Check that flight isn't full.
+                if (fileContents.get(counter + 1).substring(8, fileContents.get(counter + 1).lastIndexOf("/"))
+            .equals(fileContents.get(counter + 1).substring(fileContents.get(counter + 1).lastIndexOf("/") + 1))) {
+                    throw new IOException("FLIGHT FULL");
+                }
+                counter++;
+                pw.println(fileContents.get(counter));
+                pw.println(passenger.toString());
+            }
+            counter++;
         }
 
     }
