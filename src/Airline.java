@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -17,25 +18,11 @@ public abstract class Airline implements Serializable {
 
     private int capacity;
 
-    private ArrayList<Passenger> souls;
-
     public Airline(String introduction, String name, int capacity) {
         this.introduction = introduction;
         this.name = name;
 
         this.capacity = capacity;
-
-        this.souls = new ArrayList<>();
-    }
-
-    // Add accessor methods
-
-    public boolean addPassenger(Passenger addPassenger) {
-        if (this.souls.size() == capacity) {
-            return false;
-        }
-        this.souls.add(addPassenger);
-        return true;
     }
 
     public String getName() {
@@ -47,16 +34,6 @@ public abstract class Airline implements Serializable {
     }
 
     public int getCapacity() {
-        return this.capacity;
+
     }
-
-    public boolean containsPassenger(Passenger passenger) {
-        return this.souls.contains(passenger);
-    }
-
-    public ArrayList<Passenger> getSouls() {
-        return this.souls;
-    }
-
-
 }
