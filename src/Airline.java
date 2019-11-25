@@ -34,6 +34,6 @@ public abstract class Airline implements Serializable {
     }
 
     public int getCapacity() {
-
+        return this.capacity;
     }
 }
