@@ -19,6 +19,12 @@ public class GUI {
         final String[] lastName = {""};
         final int[] age = {0};
         final String[] airline = {""};
+        final Airline userAirline[] = {null};
+        final BoardingPass passengerBoardingPass[] = {null};
+        final Passenger newPassenger[] = {null};
+        Gate passengerGate = new Gate();
+        final JLabel userBoardingPass[] = {null};
+        String theGate = passengerGate.generateGate();
         /**
          * The first two functions are getting hostname and port number
          */
@@ -60,7 +66,7 @@ public class GUI {
         JLabel welcomeLabel = new JLabel("Welcome to the Purdue University Airline" +
                 " Reservation Management System!");//text
         BufferedImage purdueLogo = ImageIO.read(new File
-                ("C:\\Users\\janis_sfifymt\\PJ05-CS180\\Images\\PurudeLogo.png"));
+                ("PurudeLogo.png"));
         JLabel logoLabel = new JLabel(new ImageIcon(purdueLogo));//image
         JButton welcomeExit = new JButton("Exit");
         JButton bookButton = new JButton("Book a Flight");
@@ -283,6 +289,67 @@ public class GUI {
                  if (check == JOptionPane.YES_OPTION) {
                      informationPanel.setVisible(false);
                      system.add(flightStatus);
+                     /**
+                      * Generating Passenger
+                      */
+                     if (airline[0] == new Delta().getName()) {
+                         userAirline[0] = new Delta();
+                     } else if (airline[0] == new Southwest().getName()) {
+                         userAirline[0] = new Southwest();
+                     } else {
+                         userAirline[0] = new Alaska();
+                     }
+                     newPassenger[0] = new Passenger(Integer.toString(age[0]), firstName[0], lastName[0]);
+                     passengerBoardingPass[0] = new BoardingPass(userAirline[0], newPassenger[0], theGate);
+                     userBoardingPass[0] = new JLabel(passengerBoardingPass[0].toString());
+                     userAirline[0].incrementNumPassengers();
+                     /**
+                      * flight status is created using information from this
+                      */
+                     flightStatus.setLayout(new GridLayout(4, 1));
+                     JLabel thanksLabel = new JLabel("<html>Flight data displaying for "
+                             + airline[0] + " Airlines" +
+                             "<br/>Enjoy your flight!" +
+                             "<br/>Flight is now boarding at Gate " + theGate + "<html>");
+                     thanksLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+                     //the list
+                     DefaultListModel passengers = new DefaultListModel();
+                     passengers.addElement("" + userAirline[0].getCurrentNumPassengers()
+                             + " : " + userAirline[0].getCapacity());
+                     passengers.addElement(newPassenger[0].toString());
+                     JList passengerList = new JList(passengers);
+                     passengerList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+                     passengerList.setVisibleRowCount(-1);
+                     JScrollPane listScroller = new JScrollPane(passengerList);
+                     listScroller.setPreferredSize(new Dimension(width, height/2));
+
+                     //buttons
+                     JButton statusExit = new JButton("Exit");
+                     JButton refresh = new JButton("Refresh Flight Status");
+                     //action listeners
+                     statusExit.addActionListener(new ActionListener() {
+                         public void actionPerformed(ActionEvent actionEvent) {
+                             system.dispose();
+                         }
+                     });
+                     refresh.addActionListener(new ActionListener() {
+                         public void actionPerformed(ActionEvent actionEvent) {
+                             // TODO: 11/26/2019
+                         }
+                     });
+
+                     //layout
+                     userBoardingPass[0].setHorizontalAlignment(SwingConstants.LEFT);
+                     flightStatus.setAlignmentX(Component.LEFT_ALIGNMENT);
+                     flightStatus.add(thanksLabel);
+                     flightStatus.add(passengerList);
+                     flightStatus.add(userBoardingPass[0]);
+
+                     JPanel statusButtons = new JPanel();
+                     statusButtons.add(statusExit);
+                     statusButtons.add(refresh);
+                     flightStatus.add(statusButtons);
                  } else {
                      //do nothing
                  }
@@ -313,8 +380,11 @@ public class GUI {
         informationPanel.add(infoButtons, BorderLayout.PAGE_END);
 
         /**
-         * flightStatus
+         * flightStatus is created in the action listener for the nextInfo button
          */
+
+
+
 
         system.add(introductionPanel);
         system.setVisible(true);
