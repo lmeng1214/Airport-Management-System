@@ -25,6 +25,7 @@ public abstract class Airline implements Serializable {
         this.name = name;
 
         this.capacity = capacity;
+
         this.currentNumPassengers.set(0);
     }
 

@@ -19,6 +19,5 @@ public class Southwest extends Airline {
                         "other airlines, and offer two checked bags.<br/>" +
                         "We hope you choose Southwest for your next flight.<html>",
                 "Southwest",
-                100);
     }
 }

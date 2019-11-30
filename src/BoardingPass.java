@@ -35,7 +35,6 @@ public class BoardingPass implements Serializable {
         pass += "PASSENGER AGE : " + age + "<br/>";
         pass += "You can now begin boarding at gate " + gateNumber + "<br/>";
         pass += "-----------------------------------<html>";
-
         return pass;
     }
 }
