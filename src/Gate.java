@@ -1,13 +1,19 @@
 import java.io.Serializable;
 import java.util.Random;
 
+/**
+ * Generates a gate string
+ *
+ * random number generator resource -
+ * https://stackoverflow.com/questions/5271598/java-generate-random-number-between-two-given-values
+ *
+ * @author Janis Vuskalns
+ * @version 11/21/19
+ */
+
 public class Gate implements Serializable {
     //gate letters
     private char[] letters = new char[] {'A', 'B', 'C'};
-    //gate numbers
-    private int[] numbers = new int[]
-            { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                    11, 12, 13, 14, 15, 16, 17, 18};
 
     public Gate() {
     }//default constructor, no extra info needed
@@ -20,7 +26,7 @@ public class Gate implements Serializable {
 
         //generates gate
         gate += letters[rng.nextInt(3)];
-        gate += numbers[rng.nextInt(18)];
+        gate += (rng.nextInt(18) + 1);
 
         //returns gate between A1 and C18
         return gate;
