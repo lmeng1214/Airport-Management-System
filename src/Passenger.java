@@ -1,5 +1,16 @@
 import java.io.Serializable;
 
+/**
+ * Takes info to make a passenger
+ *
+ *
+ * @author Janis Vuskalns
+ * @version 11/21/19
+ *
+ * @author Lenny Meng, meng110@purdue.edu
+ * @version Nov 23 2019
+ */
+
 public class Passenger implements Serializable {
     private int age;
     private String firstName;
