@@ -41,6 +41,6 @@ public class Passenger implements Serializable {
     }
 
     public String toString() {
-         return firstName.charAt(0) + ". " + lastName + ", " +  age + "\n";
+         return firstName.charAt(0) + ". " + lastName + ", " +  age;
     }
 }

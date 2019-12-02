@@ -16,19 +16,12 @@ import java.net.Socket;
 public class ReservationServer {
     private ServerSocket serverSocket;
     private File reservations;
-    private String deltaGate;
-    private String southWestGate;
-    private String alaskaGate;
 
     public ReservationServer() throws IOException {
         serverSocket = new ServerSocket(64114);
-        Gate gateMaker = new Gate();
-        deltaGate = gateMaker.generateGate();
-        southWestGate = gateMaker.generateGate();
-        alaskaGate = gateMaker.generateGate();
     }
 
-    public void start() throws IOException, ClassNotFoundException {
+    public void start() throws IOException {
         //Initialize reservations.txt
         /**
          * format
@@ -58,53 +51,29 @@ public class ReservationServer {
          * EOF
          */
 
-        reservations = new File("reservations.txt");
-        PrintWriter pw = new PrintWriter(reservations);
+        reservations = new File("reservations.txt"); //Creating a new pw should clear the file.
+        FileWriter fw = new FileWriter(reservations);
+        PrintWriter pw = new PrintWriter(fw);
 
-        Airline airlines[] = {new Delta(), new Alaska(), new Southwest()};
-        for (int i = 0; i < 3; i++) {
+        Airline[] airlines = {new Delta(), new Alaska(), new Southwest()};
+        for (int i = 0; i < 3; i++) { // Initialize the reservations.txt file with a clean template.
             pw.println(airlines[i].getName().toUpperCase());
             pw.println("0/" + airlines[i].getCapacity());
             pw.println(airlines[i].getName() + " passenger list");
+            pw.println("End of passenger list");
             pw.println();
         }
         pw.println("EOF");
+
         pw.close();
-
-        FileInputStream fis = new FileInputStream(reservations);
-        BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-        String s = br.readLine();
-        while (true) {
-            if(!(s == null || s.isEmpty() || s.isBlank())) {
-                if (s.equals("EOF")) {
-                    break;
-                }
-                s = br.readLine();
-            } else {
-                s = br.readLine();
-            }
-        }
-
-
-
+        fw.close();
 
         System.out.println("Server started on port " + this.serverSocket.getLocalPort());
 
-        while (true) {
-            Socket clientSocket = serverSocket.accept();
-            ClientHandler clientHandler = new ClientHandler(clientSocket, reservations,
-                    deltaGate, southWestGate, alaskaGate);
+        while(true) {
+            Socket clientSocket = serverSocket.accept(); // Waits for the client to connect
+            ClientHandler clientHandler = new ClientHandler(clientSocket, reservations);
             new Thread(clientHandler).start();
-
-            /**
-             *         ServerSocket serverSocket = new ServerSocket(4343);
-             *
-             *         Loop{
-             * Socket socket = serverSocket.accept();
-             *             EchoServer server = new EchoServer(socket);
-             *                         new Thread(server).start();
-             *                         }
-             */
         }
     }
 
