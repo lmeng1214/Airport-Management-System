@@ -65,7 +65,7 @@ public class ClientHandler implements Runnable {
         try {
             ois = new ObjectInputStream(this.clientSocket.getInputStream());
         } catch (Exception e) {
-            e.printStackTrace();
+            // Do nothing, RECV error isn't too important
         }
 
         this.reservations = reservations;
