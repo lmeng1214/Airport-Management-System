@@ -117,12 +117,17 @@ public class ClientHandler implements Runnable {
                     case "getSouls" : //Returns an arraylist of passengers on the airline given.
                         Airline airline = (Airline) ois.readObject();
                         oos.writeObject(getSouls(airline));
-                        oos.writeObject(getSouls(airline).size());
+                        oos.writeObject(getNumPassengersFromFile(airline));
                         oos.flush();
                         break;
-                    case "getNumPassengers" : // Just does getSouls() but returns the size of it.
+                    case "getNumPassengers" : // Get XX/MAXCAPACITY from the FILE.
                         airline = (Airline) ois.readObject();
-                        oos.writeObject(getSouls(airline).size());
+                        oos.writeObject(getNumPassengersFromFile(airline));
+                        oos.flush();
+                        break;
+                    case "getCapacity" : //Get MAXIMUM CAPACITY from the FILE.
+                        airline = (Airline)  ois.readObject();
+                        oos.write(getMaxCapacityFromFile(airline));
                         oos.flush();
                         break;
                     case "END_PROGRAM" : {
@@ -170,7 +175,7 @@ public class ClientHandler implements Runnable {
             FileWriter fw = new FileWriter(reservations); // This declaration will clear the file.
             PrintWriter pw = new PrintWriter(fw);
 
-            int numPassengers = -1; //First find the airline's passenger capacity. Set to -1 to avoid false positives.
+            int numPassengers = -1; //First find the airline's booked passengers. Set to -1 to avoid false positives.
             int i = 0;
             while(true) {
                 if (fileContents.get(i).equals(airline.getName().toUpperCase())) { // Loop until it hits the passenger's airline.
@@ -230,6 +235,41 @@ public class ClientHandler implements Runnable {
                     }
                 }
             }
+        }
+    }
+
+    private int getNumPassengersFromFile(Airline airline) throws IOException {
+        synchronized (reservations) {
+            fIs.getChannel().position(0); //Set the reader head to the start of the file.
+            br = new BufferedReader(new InputStreamReader(fIs));
+
+            while (true) { // Loop until
+                String currLine = br.readLine();
+                if (currLine.equals(airline.getName().toUpperCase())) { // We are at the airliner name.
+                    String capacityString = br.readLine();
+
+                    //Return the number XX in XX/MaxCapacity
+                    return Integer.parseInt(capacityString.substring(0, capacityString.indexOf("/")));
+                }
+            }
+        }
+    }
+
+    private int getMaxCapacityFromFile(Airline airline) throws IOException {
+        synchronized (reservations) {
+            fIs.getChannel().position(0); //Set the reader head to the start of the file.
+            br = new BufferedReader(new InputStreamReader(fIs));
+
+            while (true) { // Loop until
+                String currLine = br.readLine();
+                if (currLine.equals(airline.getName().toUpperCase())) { // We are at the airliner name.
+                    String capacityString = br.readLine();
+
+                    //Return the number XX in NumPassengers/XX
+                    return Integer.parseInt(capacityString.substring(capacityString.indexOf("/") + 1));
+                }
+            }
+
         }
     }
 }
